@@ -1,0 +1,16 @@
+[
+    {
+        "id": "1",
+        "title": "Ovo frito",
+        "description": "Fritar o ovo",
+        "date": "2022-09-22",
+        "user_id": "1"  
+    },
+    {
+        "id": "2",
+        "title": "Gelo",
+        "description": "Congelar água",
+        "date": "2022-09-22",
+        "user_id": "1"  
+    }
+]
