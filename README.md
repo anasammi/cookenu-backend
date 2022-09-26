@@ -1,6 +1,6 @@
 # cookenu
 
-API desenvolvida para ser utilizada como um sistema receitas.
+API desenvolvida para ser utilizada como uma rede social de compartilhamento de receitas.
 
 🔗 Link da documentação:
 
