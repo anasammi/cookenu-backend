@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { UserData } from "../../data/UserData";
 import { MissingField } from "../../error/MissingFields";
+import { MissingToken } from "../../error/MissingToken";
 import { User } from "../../model/User";
 import { Authenticator } from "../../services/Authenticator";
 import { HashManager } from "../../services/HashManager";
@@ -81,7 +82,7 @@ export class UserEndpoint {
       const token = req.headers.authorization
       
       if(!token){
-        throw new Error("Token faltando")
+        throw new MissingToken()
       }
 
       const id = new Authenticator().getTokenData(token)
@@ -104,7 +105,7 @@ export class UserEndpoint {
       const {id} = req.params
       
       if(!token){
-        throw new Error("Token faltando")
+        throw new MissingToken()
       }
 
       new Authenticator().getTokenData(token)
