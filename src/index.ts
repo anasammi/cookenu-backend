@@ -1,15 +1,13 @@
 import { app } from "./app";
-import { BaseDatabase } from "./data/BaseDatabase";
-import { createRecipe } from "./endpoints/recipes/createRecipe";
-import { getRecipeById } from "./endpoints/recipes/getRecipeById";
+import { RecipeEndpoint } from "./endpoints/recipes/Recipes";
 import { UserEndpoint } from "./endpoints/users/User";
-import { HashManager } from "./services/HashManager";
+
 
 const userEndpoint = new UserEndpoint()
+const recipeEndpoint = new RecipeEndpoint()
 
-app.post("/signup", userEndpoint.createUser);
-app.post("/login", userEndpoint.login);
 app.get("/user/profile", userEndpoint.getUserProfile);
 app.get("/user/:id/profile", userEndpoint.getUserById);
-// app.get("/recipe/:id", getRecipeById);
-// app.post("/recipe", createRecipe);
+app.post("/signup", userEndpoint.createUser);
+app.post("/login", userEndpoint.login);
+app.post("/recipe", recipeEndpoint.createRecipe);

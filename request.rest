@@ -19,3 +19,5 @@ POST  http://localhost:3003/login
 GET  http://localhost:3003/user/profile
 Headers: Authorization{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dCI6ImQ5NTRkMWZlLWQ0NDUtNGI4MS1iOWRmLWMxMzU4OTM1YjI1OSIsImlhdCI6MTY2NDIxNzkyMSwiZXhwIjoxNjY0MzA0MzIxfQ.ME4Z8kx7dYd7peXqQalajlU0E_u5n4dwyQJkQD9xnFE"}
 
+###
+POST http://localhost:3003/recipe
