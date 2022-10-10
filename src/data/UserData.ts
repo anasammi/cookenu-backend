@@ -1,4 +1,6 @@
-import { User, UserBD } from "../model/User";
+import moment from "moment";
+import { join } from "path";
+import { FeedDB, User, UserBD } from "../model/User";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class UserData extends BaseDatabase {
@@ -50,5 +52,53 @@ export class UserData extends BaseDatabase {
     };
 
     return user;
+  }
+
+  async insertFollow(idFollower: string, idFollowed: string): Promise<string> {
+    await this.getConnection()
+      .insert({
+        id_follower: idFollower,
+        id_followed: idFollowed
+      })
+      .into("followers_cookenu")
+    
+    return `A pessoa com id ${idFollower} está seguindo a pessoa com id ${idFollowed}`
+
+  }
+
+  async deleteFollow(idFollower: string, idToUnfollow: string): Promise<string> {
+    await this.getConnection()
+      .delete("*")
+      .from("followers_cookenu")
+      .where({
+        id_follower: idFollower
+      })
+      .andWhere({
+        id_followed: idToUnfollow
+      })
+
+    return `A pessoa com id ${idFollower} deixou de seguir a pessoa com id ${idToUnfollow}`
+  }
+
+  async selectFeed(id: string): Promise<FeedDB[]>{
+    const result = await this.getConnection()
+      .select("recipe_cookenu.*", "user_cookenu.name")
+      .from("followers_cookenu")
+      .innerJoin("user_cookenu", "followers_cookenu.id_followed", "user_cookenu.id")
+      .innerJoin("recipe_cookenu", "followers_cookenu.id_followed", "recipe_cookenu.user_id")
+      .where("followers_cookenu.id_follower", id)
+
+    const typeFeed = result.map((feed:any)=>{
+      const type: FeedDB = {
+        id: feed.id,
+        title: feed.title,
+        description: feed.description,
+        date: moment(feed.date, "YYYY-MM-DD").format("DD/MM/YYYY"),
+        user_id: feed.user_id,
+        name: feed.name
+      }
+      return type
+    })
+    return typeFeed
   }
 }

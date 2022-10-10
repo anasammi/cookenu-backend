@@ -1,6 +1,7 @@
 import { BaseDatabase } from "./BaseDatabase";
 const users = require('./users.json')
 const recipes = require('./recipes.json')
+const follows = require('./follows.json')
 
 const database = new BaseDatabase().getConnection()
 
@@ -21,6 +22,14 @@ const createTables = async ()=> {
             user_id VARCHAR(255),
             FOREIGN KEY (user_id) REFERENCES user_cookenu(id)
         );
+
+        CREATE TABLE IF NOT EXISTS followers_cookenu(
+            id_follower VARCHAR(255),
+            id_followed VARCHAR(255),
+            PRIMARY KEY(id_follower, id_followed)
+            FOREIGN KEY (id_follower) REFERENCES user_cookenu(id),
+            FOREIGN KEY (id_followed) REFERENCES user_cookenu(id)
+        )
     `)
 
     console.log("Tabelas criadas com sucesso!")
@@ -31,6 +40,8 @@ const populateTables = async() => {
         .insert(users)
     await database("recipe_cookenu")
         .insert(recipes)
+    await database("followers_cookenu")
+        .insert(follows)
 }
 
 createTables()

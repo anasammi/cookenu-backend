@@ -1,3 +1,5 @@
+import moment from "moment"
+
 export class Recipe{
     constructor(
         private id: string,
@@ -26,4 +28,10 @@ export class Recipe{
     getUserId(){
         return this.userId
     }
+    
+    setData(date:any){
+        this.date = date
+    }
+
 }
+    

@@ -5,6 +5,7 @@ import { MissingToken } from "../../error/MissingToken";
 import { Recipe } from "../../model/Recipe";
 import { Authenticator } from "../../services/Authenticator";
 import { IdGenerator } from "../../services/idGenerator";
+import moment from "moment"
 
 export class RecipeEndpoint {
 
@@ -35,5 +36,31 @@ export class RecipeEndpoint {
         catch (e:any){
             res.status(e.statusCode || 500).send({ message: e.message });
         }
-    }
+    };
+
+    async getRecipeById(req: Request, res: Response){
+        try{
+            const token = req.headers.authorization
+            const {id} = req.params
+            
+            if(!token){
+                throw new MissingToken()
+            }
+
+            new Authenticator().getTokenData(token)
+
+            const recipeData = await new RecipeData().getRecipeById(id)
+
+            if(!recipeData){
+                throw new Error("Receita não encontrada")
+            }
+
+            recipeData.setData(moment(recipeData.getDate(), "YYYY-MM-DD").format("DD-MM-YYYY"))
+
+            res.status(200).send(recipeData)
+        }
+        catch (e:any){
+            res.status(e.statusCode || 500).send({ message: e.message });
+        }
+    };
 }
