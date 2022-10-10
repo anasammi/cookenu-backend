@@ -21,3 +21,6 @@ Headers: Authorization{"token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpbnB1dC
 
 ###
 POST http://localhost:3003/recipe
+
+###
+GET http://localhost:3003/recipe/:id

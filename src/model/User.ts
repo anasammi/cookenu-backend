@@ -26,3 +26,12 @@ export interface UserBD{
     name: string
     email: string,
 }
+
+export interface FeedDB{
+    id: string,
+    title: string,
+    description: string,
+    date: string,
+    user_id: string,
+    name: string
+}

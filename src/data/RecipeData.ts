@@ -19,4 +19,23 @@ export class RecipeData extends BaseDatabase {
         return `Receita ${recipe.getTitle()} criada com sucesso!`
   }
 
+  async getRecipeById(id: string): Promise<Recipe|undefined> {
+    const result = await this.getConnection()
+      .select("*")
+      .from(RecipeData.tableName)
+      .where({id})
+
+      if(!result.length){
+        return undefined
+      }
+      
+      return new Recipe(
+        result[0].id,
+        result[0].title,
+        result[0].description,
+        result[0].date,
+        result[0].user_id
+      )
+  }
+
 }

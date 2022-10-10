@@ -124,4 +124,67 @@ export class UserEndpoint {
     }
   }
 
+  async followUser(req: Request, res: Response){
+    try{
+      const token = req.headers.authorization
+      const {idToFollow} = req.body
+
+      if(!token){
+        throw new MissingToken()
+      }
+
+      const idFollower = new Authenticator().getTokenData(token)
+      const followPerson = await new UserData().insertFollow(idFollower, idToFollow)
+      res.status(200).send({message: followPerson})
+
+    }
+    catch(e:any){
+      console.log(e.sqlMessage);
+      if(e.sqlMessage?.includes("Duplicate entry")){
+        res.status(500).send({message: "Você já está seguindo esse usuário"})
+      } 
+      res.status(e.statusCode || 500).send({message: e.message})
+      
+    }
+  }
+
+  async unfollowUser(req: Request, res: Response) {
+    try{
+      const token = req.headers.authorization
+      const {idToUnfollow} = req.body
+
+      if(!token){
+        throw new MissingToken()
+      }
+
+      const idFollower = new Authenticator().getTokenData(token)
+      const unfollowPerson = await new UserData().deleteFollow(idFollower, idToUnfollow)
+      res.status(200).send({message: unfollowPerson})
+
+    }
+    catch(e:any){
+      res.status(e.statusCode || 500).send({message: e.message})
+    }
+  }
+
+  async getFeed(req: Request, res: Response) {
+    try{
+      const token = req.headers.authorization
+
+      if(!token){
+        throw new MissingToken()
+      }
+
+      const id = new Authenticator().getTokenData(token)
+      const userData = new UserData()
+      const feed = await userData.selectFeed(id)
+      
+
+      res.status(200).send(feed)
+
+    }
+    catch(e:any){
+      res.status(e.statusCode || 500).send({message: e.message})
+    }
+  }
 }
