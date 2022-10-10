@@ -1,16 +1,16 @@
 import * as jwt from "jsonwebtoken";
-import { USER_ROLES } from "../entities/User";
 import dotenv from "dotenv";
+import { USER_ROLES } from "../model/User";
 
 dotenv.config();
 
 export interface AuthenticationData {
-  // role: USER_ROLES;
+  role: USER_ROLES;
   id: string
 }
 
 export class Authenticator {
-  public generateToken(input: string): string {
+  public generateToken(input: AuthenticationData): string {
     const token = jwt.sign({input}, process.env.JWT_KEY as string, {
       expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
     });

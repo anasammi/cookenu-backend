@@ -2,7 +2,7 @@ import { Request, Response } from "express";
 import { UserData } from "../../data/UserData";
 import { MissingField } from "../../error/MissingFields";
 import { MissingToken } from "../../error/MissingToken";
-import { User } from "../../model/User";
+import { User, USER_ROLES } from "../../model/User";
 import { Authenticator } from "../../services/Authenticator";
 import { HashManager } from "../../services/HashManager";
 import { IdGenerator } from "../../services/idGenerator";
@@ -11,14 +11,18 @@ export class UserEndpoint {
 
   async createUser(req: Request, res: Response) {
     try {
-      const { email, name, password } = req.body;
+      const { email, name, password, role } = req.body;
 
-      if (!name || !email || !password) {
+      if (!name || !email || !password || !role) {
         throw new MissingField();
       }
 
       if (password.length < 6) {
         throw new Error("A senha deve conter no mínimo 6 caracteres");
+      }
+
+      if(role.toUpperCase() !== USER_ROLES.NORMAL && role.toUpperCase() !== USER_ROLES.ADMIN){
+        throw new Error("O usuário só pode ser do tipo NORMAL ou ADMIN")
       }
 
       const userData = new UserData();
@@ -33,11 +37,11 @@ export class UserEndpoint {
 
       const hashPassword = await new HashManager().hash(password);
 
-      const newUser = new User(id, email, name, hashPassword);
+      const newUser = new User(id, email, name, hashPassword, role);
 
       const response = await userData.createUser(newUser);
       
-      const token = new Authenticator().generateToken(id);
+      const token = new Authenticator().generateToken({role, id});
 
       res.status(201).send({ message: response, token });
     } catch (e: any) {
@@ -67,7 +71,7 @@ export class UserEndpoint {
         throw new Error("Senha incorreta")
       }
 
-      const token = new Authenticator().generateToken(userExists.getId())
+      const token = new Authenticator().generateToken({role: userExists.getRole(), id: userExists.getId()})
 
       res.status(200).send({message:"Usuário logado com sucesso", token})
     }

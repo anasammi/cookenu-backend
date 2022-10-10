@@ -1,9 +1,15 @@
+export enum USER_ROLES {
+    ADMIN = "ADMIN",
+    NORMAL = "NORMAL"
+}
+
 export class User{
     constructor(
         private id: string,
         private email: string,
         private name: string,
-        private password: string
+        private password: string,
+        private role: USER_ROLES
     ){}
 
     getId(){
@@ -18,13 +24,16 @@ export class User{
     getPassword(){
         return this.password
     }
+    getRole(){
+        return this.role
+    }
 
 };
 
 export interface UserBD{
     id: string,
     name: string
-    email: string,
+    email: string
 }
 
 export interface FeedDB{

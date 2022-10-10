@@ -19,7 +19,8 @@ export class UserData extends BaseDatabase {
       result[0].id,
       result[0].name,
       result[0].email,
-      result[0].password
+      result[0].password,
+      result[0].role
     );
   }
 
@@ -30,6 +31,7 @@ export class UserData extends BaseDatabase {
         email: user.getEmail(),
         name: user.getName(),
         password: user.getPassword(),
+        role: user.getRole().toUpperCase()
       })
       .into(UserData.tableName);
     return "Usuário cadastrado com sucesso";
